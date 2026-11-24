@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сизни согиндим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: tender, quiet, sincere — a love letter written by a programmer at night
+   IDEA: a terminal left open at 3am, compiling a confession; git log of memories
+   PICTURE: starfield night sky with a moon, terminal window typing the longing
+   COLOUR and TYPE: deep night indigo, moonlight ivory, one rose accent; Lora + Nunito + JetBrains Mono (all with Uzbek Cyrillic)
+   LAYOUT: full-bleed night bands stacked: terminal hero, live counter, bug report + git log, letter, the question */
+:root{color-scheme:dark;--bg:#0b0d1f;--ink:#efe9df;--mute:#a7a3b8;--rose:#ff6b8a;--moon:#f6e7c1;--line:rgba(239,233,223,.12);--code:#8fe3c4}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Nunito,system-ui,sans-serif;overflow-x:clip}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main{position:relative;z-index:1}
+.band{padding:clamp(48px,8vw,110px) max(5vw,18px)}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2{font-family:Lora,Georgia,serif;font-weight:500;line-height:1.1;text-wrap:balance;margin:0 0 .4em}
+h1{font-size:clamp(34px,6vw,56px)}
+h2{font-size:clamp(28px,4.4vw,42px)}
+h1 em,h2 em{font-style:italic;color:var(--moon)}
+p{margin:0 0 1em;max-width:62ch}
+.mute{color:var(--mute)}
+.hero{min-height:100svh;display:grid;place-items:center;text-align:center}
+.moon{width:96px;height:96px;border-radius:50%;margin:0 auto 28px;background:radial-gradient(circle at 35% 35%,#fffaf0,var(--moon) 55%,#d9c38f);box-shadow:0 0 60px 18px rgba(246,231,193,.18),0 0 160px 60px rgba(246,231,193,.07)}
+.term{width:min(640px,100%);margin:0 auto 34px;text-align:left;background:rgba(10,12,28,.82);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45);backdrop-filter:blur(6px)}
+.bar{display:flex;gap:7px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font:13px "JetBrains Mono",monospace;color:var(--mute)}
+.bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
+.bar span{margin-left:10px}
+pre{margin:0;padding:18px 18px 22px;font:14px/1.75 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:230px;color:var(--ink)}
+pre .k{color:#c3a6ff}pre .s{color:var(--code)}pre .c{color:#6f7397}pre .r{color:var(--rose)}
+.cur{display:inline-block;width:8px;height:1.1em;background:var(--rose);vertical-align:-3px;animation:b 1s steps(1) infinite}
+@keyframes b{50%{opacity:0}}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity 1.2s ease,transform 1.2s ease}
+.reveal.on{opacity:1;transform:none}
+.down{display:inline-block;margin-top:22px;color:var(--mute);text-decoration:none;font-size:15px;padding:12px}
+.counter{background:linear-gradient(180deg,transparent,rgba(18,21,46,.85) 20%,rgba(18,21,46,.85) 80%,transparent)}
+.big{font-family:Lora,serif;font-size:clamp(70px,16vw,160px);line-height:1;color:var(--moon);margin:.1em 0}
+.units{display:flex;flex-wrap:wrap;gap:10px 28px;font:15px "JetBrains Mono",monospace;color:var(--mute);margin:10px 0 22px}
+.units b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:22px;margin-top:28px}
+.card{background:rgba(18,21,46,.78);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
+.card h3{font:600 14px "JetBrains Mono",monospace;margin:0 0 14px;color:var(--rose)}
+dl{margin:0;font-size:16px}dt{color:var(--mute);font-size:14px;margin-top:10px}dd{margin:2px 0 0}
+.log{list-style:none;margin:0;padding:0;font:14px/1.6 "JetBrains Mono",monospace}
+.log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px dashed var(--line)}
+.log li:last-child{border:0}
+.log .h{color:#febc2e}.log .t small{display:block;color:var(--mute);font-size:12.5px}
+.letter{max-width:680px;margin:0 auto;font-size:18px}
+.letter p{max-width:none}
+.sign{font-family:Lora,serif;font-style:italic;font-size:24px;color:var(--moon);margin-top:20px}
+.ask{text-align:center;min-height:90svh;display:grid;place-items:center}
+.ring{width:120px;height:120px;margin:0 auto 26px}
+.btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:26px}
+button{font:600 17px Nunito,sans-serif;min-height:52px;padding:0 30px;border-radius:999px;cursor:pointer;border:1px solid var(--line);transition:transform .2s}
+button:focus-visible{outline:3px solid var(--moon);outline-offset:3px}
+.yes{background:var(--rose);color:#1a0b12;border-color:var(--rose);box-shadow:0 10px 40px rgba(255,107,138,.35)}
+.yes:hover{transform:translateY(-2px)}
+.talk{background:transparent;color:var(--ink)}
+.talk:hover{background:rgba(239,233,223,.06)}
+#answer{max-width:560px;margin:28px auto 0;display:none}
+#answer.on{display:block;animation:f 1s ease}
+@keyframes f{from{opacity:0;transform:translateY(10px)}}
+.link{display:inline-block;margin-top:8px;color:var(--moon);font-weight:600;padding:10px 4px}
+.heart{position:fixed;bottom:-30px;z-index:5;pointer-events:none;color:var(--rose);animation:up linear forwards}
+@keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monospace;color:#6f7397}
+@media(max-width:600px){pre{font-size:12.5px;min-height:250px}.log li{grid-template-columns:1fr;gap:2px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<main>
+  <section class="band hero">
+    <div class="wrap">
+      <div class="moon" aria-hidden="true"></div>
+      <div class="term" role="img" aria-label="Терминал ойнаси: согинч хакида код">
+        <div class="bar"><i></i><i></i><i></i><span>~/yurak/sogindim.js</span></div>
+        <pre id="code"></pre>
+      </div>
+      <div class="reveal" id="heroText">
+        <h1>Сизни жуда <em>согиндим</em>, <span class="nm"></span></h1>
+        <p class="mute" style="margin:0 auto">Айтолмаган сузларимни кодга ёздим. Пастга караб укиб чикинг.</p>
+        <a class="down" href="#vaqt">пастга ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band counter" id="vaqt">
+    <div class="wrap">
+      <h2>Охирги сухбатимиздан бери</h2>
+      <div class="big" id="days">0</div>
+      <div class="units"><span><b id="hh">00</b> соат</span><span><b id="mm">00</b> дакика</span><span><b id="ss">00</b> сония</span></div>
+      <p>Хар куни телефонимни кулимга олиб, ёзишни бошлаб, кейин учириб куярдим. Бу ракам уша ёзилмаган хабарларнинг сони хам.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>Бир оз <em>дастурчи тилида</em></h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Хато хисоботи #001</h3>
+          <dl>
+            <dt>Муаммо</dt><dd>Хаётимнинг энг мухим кисми ишламаяпти — Сиз йуксиз.</dd>
+            <dt>Кутилган натижа</dt><dd>Эрталаб Сизнинг «хайрли тонг»ингиз билан уйгониш.</dd>
+            <dt>Хакикий натижа</dt><dd>Жимжитлик. Ва хар кеча шу ойни куриб, Сизни уйлаш.</dd>
+            <dt>Мухимлик даражаси</dt><dd style="color:var(--rose)">Критик</dd>
+            <dt>Ечим</dt><dd>Факат битта. У хам Сизнинг кулингизда.</dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h3>git log --yurak</h3>
+          <ul class="log" id="log"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="letter reveal">
+      <h2><span class="nm"></span>, Сизга хат</h2>
+      <p>Челябинскдаги уша январ кунини эслайсизми? Сиз шунчалик чиройли эдингиз — мен уша лахзани хали хам аник эслайман. Май ойидан бери гаплашмадик. Бу вакт ичида куп нарсани тушундим: хато килган жойларимни, Сиз учун канчалик мухим булишим кераклигини ва энг асосийси — Сизсиз хеч нарса аввалгидек эмаслигини.</p>
+      <p>Мен код ёзаман. Кодда хар бир хатони топиб, тузатиш мумкин. Хаётда эса баъзан факат юракни очиб, ростини айтиш колади. Рости шу: мен Сизни севаман. Бугун хам, уша январда хам.</p>
+      <p>Сизга босим утказмокчи эмасман. Факат билишингизни истайман: Сиз учун эшик доим очик. Жавобингиз кандай булмасин, мен уни хурмат киламан.</p>
+      <div class="sign">— <span class="me"></span></div>
+    </div>
+  </section>
+
+  <section class="band ask">
+    <div class="wrap">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#d9c38f"/><stop offset=".5" stop-color="#fffaf0"/><stop offset="1" stop-color="#c9ad6e"/></linearGradient>
+        <radialGradient id="d"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ffc2cf"/></radialGradient></defs>
+        <ellipse cx="60" cy="78" rx="34" ry="30" fill="none" stroke="url(#g)" stroke-width="7"/>
+        <path d="M46 46 L60 30 L74 46 L60 56 Z" fill="url(#d)" stroke="#fff" stroke-width="1.5"/>
+        <path d="M46 46 H74 M60 30 L54 46 L60 56 L66 46 Z" fill="none" stroke="rgba(255,107,138,.45)" stroke-width="1"/>
+      </svg>
+      <h1><span class="nm"></span>, менга <em>турмушга чикасизми?</em></h1>
+      <p class="mute" style="margin:0 auto">Хар кандай жавобингиз мен учун кадрли.</p>
+      <div class="btns">
+        <button class="yes" id="yes">Ха, розиман</button>
+        <button class="talk" id="talk">Аввал гаплашайлик</button>
+      </div>
+      <div id="answer" aria-live="polite"></div>
+    </div>
+  </section>
+  <footer>согинч ва JavaScript билан ёзилди · <span class="me"></span></footer>
+</main>
+
+<script>
+{
+/* ======= SHU YERNI O'ZGARTIRING ======= */
+const CONFIG = {
+  ism: "Гулшода",
+  menIsmim: "Сизни севган дастурчи",
+  oxirgiSuhbat: "2026-05-15T21:00",
+  telegram: "zmn_dev",
+  xotiralar: [
+    ["v2.0", "release: биз — абадий", "хали ёзилмаган… Сизнинг жавобингизни кутяпти"],
+    ["9b1e0c", "chore: май ойидан бери кутиш", "хар куни Сизни уйладим"],
+    ["4f2a91", "fix: нотугри сузлар учун кечирим", "айтолмай колганим учун хам"],
+    ["a7c3d2", "feat: Сизнинг кулгингиз", "энг севган овозим"],
+    ["c4e1b7", "feat: Челябинск киши илик туюла бошлади", "чунки ёнимда Сиз бор эдингиз"],
+    ["1e0f00", "init: биринчи учрашув — январ, Челябинск", "Сиз шунчалик чиройли эдингиз, кузимни узолмадим"]
+  ]
+};
+/* ===================================== */
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+document.querySelectorAll(".nm").forEach(e => e.textContent = CONFIG.ism);
+document.querySelectorAll(".me").forEach(e => e.textContent = CONFIG.menIsmim);
+document.getElementById("log").innerHTML = CONFIG.xotiralar.map(([h,t,s]) =>
+  `<li><span class="h">${esc(h)}</span><span class="t">${esc(t)}<small>${esc(s)}</small></span></li>`).join("");
+
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* stars */
+const cv = document.getElementById("sky"), cx = cv.getContext("2d");
+let stars = [];
+const size = () => {
+  const r = devicePixelRatio || 1;
+  cv.width = innerWidth * r; cv.height = innerHeight * r; cx.setTransform(r,0,0,r,0,0);
+  stars = Array.from({length: Math.round(innerWidth * innerHeight / 5500)}, () => ({
+    x: Math.random()*innerWidth, y: Math.random()*innerHeight, r: Math.random()*1.3+.2, p: Math.random()*6.28, s: Math.random()*.02+.004}));
+};
+const draw = () => {
+  cx.clearRect(0,0,innerWidth,innerHeight);
+  for (const s of stars) {
+    s.p += s.s;
+    cx.globalAlpha = .35 + Math.sin(s.p)*.3 + .3;
+    cx.fillStyle = "#f6e7c1";
+    cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.28); cx.fill();
+  }
+  if (!reduce) requestAnimationFrame(draw);
+};
+size(); draw(); addEventListener("resize", () => { size(); if (reduce) draw(); });
+
+/* terminal typing */
+const nm = esc(CONFIG.ism);
+const lines = [
+  `<span class="k">const</span> men = <span class="k">new</span> Yigit(<span class="s">"дастурчи"</span>);`,
+  `<span class="c">// Ойлар утди. Битта хабар хам йук.</span>`,
+  `men.sogindi(<span class="s">"${nm}"</span>);  <span class="c">// → true, хар куни</span>`,
+  ``,
+  `<span class="k">while</span> (!yonimda(<span class="s">"${nm}"</span>)) {`,
+  `  men.kutaman();`,
+  `  men.oygaQarab(<span class="s">"Сизни уйлайман"</span>);`,
+  `}`,
+  ``,
+  `<span class="r">&gt; Компиляция: юрак — 1 та очик савол</span>`
+];
+const pre = document.getElementById("code");
+const heroText = document.getElementById("heroText");
+if (reduce) { pre.innerHTML = lines.join("\n"); heroText.classList.add("on"); }
+else {
+  let li = 0, ci = 0, out = "";
+  const plain = h => h.replace(/<[^>]+>/g, "").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  const tick = () => {
+    if (li >= lines.length) { pre.innerHTML = out + '<span class="cur"></span>'; heroText.classList.add("on"); return; }
+    const full = lines[li], txt = plain(full);
+    if (ci < txt.length) { ci++; pre.innerHTML = out + esc(txt.slice(0, ci)) + '<span class="cur"></span>'; setTimeout(tick, 28 + Math.random()*40); }
+    else { out += full + "\n"; li++; ci = 0; pre.innerHTML = out + '<span class="cur"></span>'; setTimeout(tick, 260); }
+  };
+  setTimeout(tick, 600);
+}
+
+/* counter */
+const start = new Date(CONFIG.oxirgiSuhbat).getTime();
+const pad = n => String(n).padStart(2, "0");
+const upd = () => {
+  let d = Math.max(0, Math.floor((Date.now() - start) / 1000));
+  document.getElementById("days").textContent = Math.floor(d / 86400) + " кун";
+  d %= 86400;
+  document.getElementById("hh").textContent = pad(Math.floor(d / 3600));
+  document.getElementById("mm").textContent = pad(Math.floor(d % 3600 / 60));
+  document.getElementById("ss").textContent = pad(d % 60);
+};
+upd(); setInterval(upd, 1000);
+
+/* reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add("on"); }), {threshold: .2});
+document.querySelectorAll(".letter.reveal").forEach(e => io.observe(e));
+
+/* answer */
+const ans = document.getElementById("answer");
+const tg = CONFIG.telegram ? `<a class="link" href="https://t.me/${encodeURIComponent(CONFIG.telegram)}">Телеграмда менга ёзинг → @${esc(CONFIG.telegram)}</a>` : "";
+const hearts = () => {
+  if (reduce) return;
+  for (let i = 0; i < 40; i++) {
+    const h = document.createElement("div");
+    h.className = "heart"; h.textContent = "♥";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.fontSize = (14 + Math.random()*26) + "px";
+    h.style.animationDuration = (3 + Math.random()*3) + "s";
+    h.style.animationDelay = Math.random()*1.5 + "s";
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 7000);
+  }
+};
+document.getElementById("yes").addEventListener("click", () => {
+  ans.innerHTML = `<h2>Сиз мени дунёдаги энг бахтли <em>инсонга</em> айлантирдингиз.</h2><p class="mute" style="margin:0 auto">Хозир телефонимни кулимда ушлаб, Сизнинг хабарингизни кутяпман.</p>${tg}`;
+  ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on"); hearts();
+});
+document.getElementById("talk").addEventListener("click", () => {
+  ans.innerHTML = `<h2>Шунинг узи мен учун <em>катта бахт</em>.</h2><p class="mute" style="margin:0 auto">Шошилмаймиз. Бир пиёла чой устида хаммасини гаплашамиз — качон хохласангиз.</p>${tg}`;
+  ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on");
+});
+}
+</script>
+</body>
+</html>
