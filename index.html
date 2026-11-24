@@ -3,79 +3,140 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Сизни согиндим</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Marck+Script&display=swap" rel="stylesheet">
 <style>
-/* VOICE: tender, quiet, sincere — a love letter written by a programmer at night
-   IDEA: a terminal left open at 3am, compiling a confession; git log of memories
-   PICTURE: starfield night sky with a moon, terminal window typing the longing
-   COLOUR and TYPE: deep night indigo, moonlight ivory, one rose accent; Lora + Nunito + JetBrains Mono (all with Uzbek Cyrillic)
-   LAYOUT: full-bleed night bands stacked: terminal hero, live counter, bug report + git log, letter, the question */
-:root{color-scheme:dark;--bg:#0b0d1f;--ink:#efe9df;--mute:#a7a3b8;--rose:#ff6b8a;--moon:#f6e7c1;--line:rgba(239,233,223,.12);--code:#8fe3c4}
+/* VOICE: tender, romantic, sincere — a love letter written by a programmer at night
+   IDEA: a sealed envelope that opens into a night sky; a terminal compiling a confession; stars forming a heart
+   PICTURE: starfield with shooting stars and a moon, wax-sealed envelope, constellation heart, ring box
+   COLOUR and TYPE: deep night indigo, moonlight ivory, rose accent; Lora + Nunito + JetBrains Mono + Marck Script
+   LAYOUT: intro envelope overlay, then full-bleed night bands: terminal, counter, constellation, reasons, code, letter, question */
+:root{color-scheme:dark;--bg:#0b0d1f;--ink:#efe9df;--mute:#a7a3b8;--rose:#ff6b8a;--rose2:#ffb3c4;--moon:#f6e7c1;--line:rgba(239,233,223,.12);--code:#8fe3c4;--card:rgba(18,21,46,.8)}
 *{box-sizing:border-box;min-width:0}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Nunito,system-ui,sans-serif;overflow-x:clip}
-#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+body{margin:0;background:radial-gradient(1200px 800px at 80% -10%,#1d1f45 0,transparent 60%),var(--bg);color:var(--ink);font:17px/1.65 Nunito,system-ui,sans-serif;overflow-x:clip}
+body.locked{overflow:hidden}
+#sky,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#sky{z-index:0}#fx{z-index:40}
 main{position:relative;z-index:1}
-.band{padding:clamp(48px,8vw,110px) max(5vw,18px)}
+.band{padding:clamp(56px,9vw,120px) max(5vw,18px)}
 .wrap{max-width:980px;margin:0 auto}
+.center{text-align:center}.center p{margin-inline:auto}
 h1,h2{font-family:Lora,Georgia,serif;font-weight:500;line-height:1.1;text-wrap:balance;margin:0 0 .4em}
 h1{font-size:clamp(34px,6vw,56px)}
 h2{font-size:clamp(28px,4.4vw,42px)}
 h1 em,h2 em{font-style:italic;color:var(--moon)}
+.script{font-family:"Marck Script",cursive;color:var(--rose2);font-size:clamp(40px,8vw,72px);line-height:1.1;margin:.1em 0}
 p{margin:0 0 1em;max-width:62ch}
 .mute{color:var(--mute)}
+#intro{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 40%,#1a1c40,#07081a 75%);transition:opacity 1.2s ease,visibility 1.2s}
+#intro.gone{opacity:0;visibility:hidden}
+.env{position:relative;width:min(320px,80vw);aspect-ratio:3/2;margin:26px auto 30px;perspective:900px}
+.env .body{position:absolute;inset:0;background:linear-gradient(160deg,#f3e6cf,#e2cfae);border-radius:6px;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.env .front{position:absolute;inset:0;border-radius:6px;background:linear-gradient(200deg,#ead9bb,#d9c3a0);clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);z-index:3}
+.env .flap{position:absolute;left:0;right:0;top:0;height:60%;background:linear-gradient(180deg,#e6d3b2,#d4bb94);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s ease;z-index:4}
+.env .card{position:absolute;left:8%;right:8%;top:10%;bottom:8%;background:#fffaf0;border-radius:4px;z-index:2;display:grid;place-items:center;font-family:"Marck Script",cursive;color:#a8324f;font-size:26px;transition:transform 1s ease .6s}
+.env .seal{position:absolute;left:50%;top:52%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8aa3,#c2183f 70%);box-shadow:0 4px 10px rgba(0,0,0,.35),inset 0 -3px 6px rgba(0,0,0,.25);z-index:5;display:grid;place-items:center;color:#ffe3ea;font-size:24px;transition:opacity .4s}
+.env.open .flap{transform:rotateX(180deg);z-index:1}
+.env.open .seal{opacity:0}
+.env.open .card{transform:translateY(-55%)}
+.btn{font:700 17px Nunito,sans-serif;min-height:52px;padding:0 32px;border-radius:999px;cursor:pointer;border:1px solid var(--line);transition:transform .2s}
+.btn:focus-visible,button:focus-visible{outline:3px solid var(--moon);outline-offset:3px}
+.rose{background:var(--rose);color:#1a0b12;border-color:var(--rose);box-shadow:0 10px 40px rgba(255,107,138,.35)}
+.rose:hover{transform:translateY(-2px)}
+.ghost{background:transparent;color:var(--ink)}
+.ghost:hover{background:rgba(239,233,223,.06)}
+#music{position:fixed;right:16px;bottom:16px;z-index:45;width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:rgba(18,21,46,.85);color:var(--moon);font-size:20px;cursor:pointer;backdrop-filter:blur(6px);display:none}
+#music.on{display:block}
+#music.playing{box-shadow:0 0 0 6px rgba(255,107,138,.15),0 0 30px rgba(255,107,138,.35);color:var(--rose)}
 .hero{min-height:100svh;display:grid;place-items:center;text-align:center}
 .moon{width:96px;height:96px;border-radius:50%;margin:0 auto 28px;background:radial-gradient(circle at 35% 35%,#fffaf0,var(--moon) 55%,#d9c38f);box-shadow:0 0 60px 18px rgba(246,231,193,.18),0 0 160px 60px rgba(246,231,193,.07)}
 .term{width:min(640px,100%);margin:0 auto 34px;text-align:left;background:rgba(10,12,28,.82);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.45);backdrop-filter:blur(6px)}
 .bar{display:flex;gap:7px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font:13px "JetBrains Mono",monospace;color:var(--mute)}
 .bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
 .bar span{margin-left:10px}
-pre{margin:0;padding:18px 18px 22px;font:14px/1.75 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:230px;color:var(--ink)}
+pre{margin:0;padding:18px 18px 22px;font:14px/1.75 "JetBrains Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;min-height:230px}
 pre .k{color:#c3a6ff}pre .s{color:var(--code)}pre .c{color:#6f7397}pre .r{color:var(--rose)}
 .cur{display:inline-block;width:8px;height:1.1em;background:var(--rose);vertical-align:-3px;animation:b 1s steps(1) infinite}
 @keyframes b{50%{opacity:0}}
-.reveal{opacity:0;transform:translateY(14px);transition:opacity 1.2s ease,transform 1.2s ease}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1.2s ease,transform 1.2s ease}
 .reveal.on{opacity:1;transform:none}
-.down{display:inline-block;margin-top:22px;color:var(--mute);text-decoration:none;font-size:15px;padding:12px}
+.hint{font-size:14px;color:var(--mute);margin-top:18px}
+.down{display:inline-block;margin-top:6px;color:var(--mute);text-decoration:none;font-size:15px;padding:12px}
 .counter{background:linear-gradient(180deg,transparent,rgba(18,21,46,.85) 20%,rgba(18,21,46,.85) 80%,transparent)}
-.big{font-family:Lora,serif;font-size:clamp(70px,16vw,160px);line-height:1;color:var(--moon);margin:.1em 0}
-.units{display:flex;flex-wrap:wrap;gap:10px 28px;font:15px "JetBrains Mono",monospace;color:var(--mute);margin:10px 0 22px}
+.big{font-family:Lora,serif;font-size:clamp(70px,16vw,160px);line-height:1;color:var(--moon);margin:.1em 0;text-shadow:0 0 40px rgba(246,231,193,.25)}
+.units{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;font:15px "JetBrains Mono",monospace;color:var(--mute);margin:10px 0 22px}
 .units b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.const{position:relative;width:min(460px,100%);aspect-ratio:1.1;margin:10px auto 0}
+.const svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.const path{fill:none;stroke:var(--rose2);stroke-width:.25;stroke-dasharray:120;stroke-dashoffset:120;transition:stroke-dashoffset 4s ease;opacity:.85;filter:drop-shadow(0 0 1px rgba(255,107,138,.9))}
+.const.on path{stroke-dashoffset:0}
+.const circle{fill:#fffaf0;animation:tw 2.6s ease-in-out infinite}
+@keyframes tw{50%{opacity:.35}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:18px;margin-top:30px}
+.flip{perspective:1000px;min-height:170px;cursor:pointer;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:center}
+.flip .in{position:relative;width:100%;height:100%;min-height:170px;transition:transform .8s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;border-radius:16px;display:grid;place-items:center;padding:20px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line)}
+.flip .f{background:linear-gradient(150deg,rgba(255,107,138,.16),rgba(18,21,46,.9))}
+.flip .f span{font-family:"Marck Script",cursive;font-size:34px;color:var(--rose2)}
+.flip .f small{display:block;font-size:13px;color:var(--mute);margin-top:4px}
+.flip .b{background:var(--card);transform:rotateY(180deg);font-size:17px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:22px;margin-top:28px}
-.card{background:rgba(18,21,46,.78);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px 18px}
 .card h3{font:600 14px "JetBrains Mono",monospace;margin:0 0 14px;color:var(--rose)}
 dl{margin:0;font-size:16px}dt{color:var(--mute);font-size:14px;margin-top:10px}dd{margin:2px 0 0}
 .log{list-style:none;margin:0;padding:0;font:14px/1.6 "JetBrains Mono",monospace}
 .log li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px dashed var(--line)}
 .log li:last-child{border:0}
 .log .h{color:#febc2e}.log .t small{display:block;color:var(--mute);font-size:12.5px}
-.letter{max-width:680px;margin:0 auto;font-size:18px}
-.letter p{max-width:none}
-.sign{font-family:Lora,serif;font-style:italic;font-size:24px;color:var(--moon);margin-top:20px}
-.ask{text-align:center;min-height:90svh;display:grid;place-items:center}
-.ring{width:120px;height:120px;margin:0 auto 26px}
+.paper{max-width:700px;margin:0 auto;background:linear-gradient(170deg,#fbf3e4,#efe1c6);color:#3a2a2a;border-radius:6px;padding:clamp(28px,5vw,56px) clamp(28px,5vw,56px) 80px;box-shadow:0 40px 90px rgba(0,0,0,.5);font-size:18px;position:relative}
+.paper h2{color:#7a2238}
+.paper h2 em{color:#a8324f}
+.paper p{max-width:none}
+.paper .sign{font-family:"Marck Script",cursive;font-size:34px;color:#a8324f;margin-top:18px}
+.paper::after{content:"♥";position:absolute;right:26px;bottom:20px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ff8aa3,#c2183f 70%);color:#ffe3ea;font-size:20px;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.ask{text-align:center;min-height:95svh;display:grid;place-items:center}
+.box{width:170px;height:150px;margin:0 auto 22px}
+.box .lid{transition:transform 1.4s cubic-bezier(.3,.8,.3,1) .3s;transform-origin:30px 70px}
+.box .ringg{transition:transform 1.4s ease .9s,opacity 1s ease .9s;transform:translateY(22px);opacity:0}
+.box.open .lid{transform:rotate(-28deg) translate(-6px,-26px)}
+.box.open .ringg{transform:none;opacity:1}
+.box .spark{opacity:0}
+.box.open .spark{animation:sp 1.8s ease-in-out 2s infinite}
+@keyframes sp{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
 .btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:26px}
-button{font:600 17px Nunito,sans-serif;min-height:52px;padding:0 30px;border-radius:999px;cursor:pointer;border:1px solid var(--line);transition:transform .2s}
-button:focus-visible{outline:3px solid var(--moon);outline-offset:3px}
-.yes{background:var(--rose);color:#1a0b12;border-color:var(--rose);box-shadow:0 10px 40px rgba(255,107,138,.35)}
-.yes:hover{transform:translateY(-2px)}
-.talk{background:transparent;color:var(--ink)}
-.talk:hover{background:rgba(239,233,223,.06)}
-#answer{max-width:560px;margin:28px auto 0;display:none}
+#answer{max-width:580px;margin:28px auto 0;display:none}
 #answer.on{display:block;animation:f 1s ease}
 @keyframes f{from{opacity:0;transform:translateY(10px)}}
-.link{display:inline-block;margin-top:8px;color:var(--moon);font-weight:600;padding:10px 4px}
-.heart{position:fixed;bottom:-30px;z-index:5;pointer-events:none;color:var(--rose);animation:up linear forwards}
+.link{display:inline-block;margin-top:8px;color:var(--moon);font-weight:700;padding:10px 4px}
+.heart{position:fixed;bottom:-30px;z-index:41;pointer-events:none;color:var(--rose);animation:up linear forwards}
 @keyframes up{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
-footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monospace;color:#6f7397}
+footer{text-align:center;padding:30px 18px 90px;font:13px "JetBrains Mono",monospace;color:#6f7397}
 @media(max-width:600px){pre{font-size:12.5px;min-height:250px}.log li{grid-template-columns:1fr;gap:2px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.const path{stroke-dashoffset:0}}
 </style>
 </head>
-<body>
+<body class="locked">
 <canvas id="sky"></canvas>
+<canvas id="fx"></canvas>
+
+<div id="intro">
+  <div>
+    <div class="script nm"></div>
+    <p class="mute" style="margin:0 auto">Сизга бир хат бор. Анчадан бери ёзилган, лекин юборилмаган.</p>
+    <div class="env" id="env" aria-hidden="true">
+      <div class="body"></div><div class="card">Сизни согиндим</div><div class="front"></div><div class="flap"></div><div class="seal">♥</div>
+    </div>
+    <button class="btn rose" id="openBtn">Хатни очиш</button>
+    <p class="hint">Овозни ёкиб куйинг — мусика бор</p>
+  </div>
+</div>
+
+<button id="music" aria-label="Мусикани ёкиш ёки учириш">♪</button>
+
 <main>
   <section class="band hero">
     <div class="wrap">
@@ -87,12 +148,13 @@ footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monos
       <div class="reveal" id="heroText">
         <h1>Сизни жуда <em>согиндим</em>, <span class="nm"></span></h1>
         <p class="mute" style="margin:0 auto">Айтолмаган сузларимни кодга ёздим. Пастга караб укиб чикинг.</p>
+        <p class="hint">Осмонга бир босиб куринг ✦</p>
         <a class="down" href="#vaqt">пастга ↓</a>
       </div>
     </div>
   </section>
 
-  <section class="band counter" id="vaqt">
+  <section class="band counter center" id="vaqt">
     <div class="wrap">
       <h2>Охирги сухбатимиздан бери</h2>
       <div class="big" id="days">0</div>
@@ -101,9 +163,28 @@ footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monos
     </div>
   </section>
 
+  <section class="band center">
+    <div class="wrap">
+      <h2>Хар кеча <em>юлдузларга</em> карайман</h2>
+      <p class="mute">Ва хар сафар улар бир шаклга келади.</p>
+      <div class="const" id="const">
+        <svg viewBox="-20 -18 40 36" aria-hidden="true"><path id="hp"/><g id="hs"></g></svg>
+      </div>
+      <div class="script reveal nm"></div>
+    </div>
+  </section>
+
+  <section class="band center">
+    <div class="wrap">
+      <h2>Сизни <em>севишимнинг</em> сабаблари</h2>
+      <p class="mute">Хар бир карточкани босиб очинг.</p>
+      <div class="cards" id="cards"></div>
+    </div>
+  </section>
+
   <section class="band">
     <div class="wrap">
-      <h2>Бир оз <em>дастурчи тилида</em></h2>
+      <h2 class="center">Бир оз <em>дастурчи тилида</em></h2>
       <div class="grid">
         <div class="card">
           <h3>Хато хисоботи #001</h3>
@@ -124,8 +205,8 @@ footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monos
   </section>
 
   <section class="band">
-    <div class="letter reveal">
-      <h2><span class="nm"></span>, Сизга хат</h2>
+    <div class="paper reveal">
+      <h2><span class="nm"></span>, <em>Сизга хат</em></h2>
       <p>Челябинскдаги уша январ кунини эслайсизми? Сиз шунчалик чиройли эдингиз — мен уша лахзани хали хам аник эслайман. Май ойидан бери гаплашмадик. Бу вакт ичида куп нарсани тушундим: хато килган жойларимни, Сиз учун канчалик мухим булишим кераклигини ва энг асосийси — Сизсиз хеч нарса аввалгидек эмаслигини.</p>
       <p>Мен код ёзаман. Кодда хар бир хатони топиб, тузатиш мумкин. Хаётда эса баъзан факат юракни очиб, ростини айтиш колади. Рости шу: мен Сизни севаман. Бугун хам, уша январда хам.</p>
       <p>Сизга босим утказмокчи эмасман. Факат билишингизни истайман: Сиз учун эшик доим очик. Жавобингиз кандай булмасин, мен уни хурмат киламан.</p>
@@ -135,18 +216,26 @@ footer{text-align:center;padding:30px 18px 50px;font:13px "JetBrains Mono",monos
 
   <section class="band ask">
     <div class="wrap">
-      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#d9c38f"/><stop offset=".5" stop-color="#fffaf0"/><stop offset="1" stop-color="#c9ad6e"/></linearGradient>
-        <radialGradient id="d"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ffc2cf"/></radialGradient></defs>
-        <ellipse cx="60" cy="78" rx="34" ry="30" fill="none" stroke="url(#g)" stroke-width="7"/>
-        <path d="M46 46 L60 30 L74 46 L60 56 Z" fill="url(#d)" stroke="#fff" stroke-width="1.5"/>
-        <path d="M46 46 H74 M60 30 L54 46 L60 56 L66 46 Z" fill="none" stroke="rgba(255,107,138,.45)" stroke-width="1"/>
+      <svg class="box" id="box" viewBox="0 0 170 150" aria-hidden="true">
+        <defs>
+          <linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#d9c38f"/><stop offset=".5" stop-color="#fffaf0"/><stop offset="1" stop-color="#c9ad6e"/></linearGradient>
+          <radialGradient id="dia"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ffc2cf"/></radialGradient>
+          <linearGradient id="vel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3203f"/><stop offset="1" stop-color="#6e0f26"/></linearGradient>
+        </defs>
+        <g class="ringg">
+          <ellipse cx="85" cy="78" rx="22" ry="20" fill="none" stroke="url(#gold)" stroke-width="5"/>
+          <path d="M75 58 L85 46 L95 58 L85 66 Z" fill="url(#dia)" stroke="#fff" stroke-width="1.2"/>
+          <g class="spark" style="transform-origin:100px 46px"><path d="M100 36 L102 44 L110 46 L102 48 L100 56 L98 48 L90 46 L98 44 Z" fill="#fffaf0"/></g>
+        </g>
+        <rect x="30" y="88" width="110" height="52" rx="8" fill="url(#vel)"/>
+        <rect x="30" y="88" width="110" height="10" rx="4" fill="#2a0710" opacity=".5"/>
+        <g class="lid"><rect x="30" y="70" width="110" height="20" rx="8" fill="url(#vel)"/><rect x="36" y="74" width="98" height="4" rx="2" fill="#ff8aa3" opacity=".35"/></g>
       </svg>
       <h1><span class="nm"></span>, менга <em>турмушга чикасизми?</em></h1>
       <p class="mute" style="margin:0 auto">Хар кандай жавобингиз мен учун кадрли.</p>
       <div class="btns">
-        <button class="yes" id="yes">Ха, розиман</button>
-        <button class="talk" id="talk">Аввал гаплашайлик</button>
+        <button class="btn rose" id="yes">Ха, розиман</button>
+        <button class="btn ghost" id="talk">Аввал гаплашайлик</button>
       </div>
       <div id="answer" aria-live="polite"></div>
     </div>
@@ -169,28 +258,40 @@ const CONFIG = {
     ["a7c3d2", "feat: Сизнинг кулгингиз", "энг севган овозим"],
     ["c4e1b7", "feat: Челябинск киши илик туюла бошлади", "чунки ёнимда Сиз бор эдингиз"],
     ["1e0f00", "init: биринчи учрашув — январ, Челябинск", "Сиз шунчалик чиройли эдингиз, кузимни узолмадим"]
+  ],
+  sabablar: [
+    ["Кулгингиз", "Сиз кулганда атрофдаги хамма нарса ёришиб кетарди."],
+    ["Кузларингиз", "Челябинскда биринчи марта караганимда, кузимни узолмадим."],
+    ["Мехрингиз", "Сиз билан энг совук кун хам илик туюларди."],
+    ["Овозингиз", "Хали хам кулогимда. Энг севган мусикам."],
+    ["Сабрингиз", "Мени бор холимча кабул килганингиз учун."],
+    ["Сиз", "Сабаб керак эмас. Сиз — Сизлигингиз учун."]
   ]
 };
 /* ===================================== */
 
+const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 document.querySelectorAll(".nm").forEach(e => e.textContent = CONFIG.ism);
 document.querySelectorAll(".me").forEach(e => e.textContent = CONFIG.menIsmim);
-document.getElementById("log").innerHTML = CONFIG.xotiralar.map(([h,t,s]) =>
+$("log").innerHTML = CONFIG.xotiralar.map(([h,t,s]) =>
   `<li><span class="h">${esc(h)}</span><span class="t">${esc(t)}<small>${esc(s)}</small></span></li>`).join("");
+$("cards").innerHTML = CONFIG.sabablar.map(([a,b], i) =>
+  `<button class="flip" aria-label="${esc(a)}"><div class="in"><div class="f"><div><span>${esc(a)}</span><small>сабаб №${i+1}</small></div></div><div class="b">${esc(b)}</div></div></button>`).join("");
+document.querySelectorAll(".flip").forEach(f => f.addEventListener("click", () => f.classList.toggle("on")));
 
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* stars */
-const cv = document.getElementById("sky"), cx = cv.getContext("2d");
-let stars = [];
+/* sky: stars + shooting stars */
+const cv = $("sky"), cx = cv.getContext("2d");
+const fx = $("fx"), fc = fx.getContext("2d");
+let stars = [], shoot = [], sparks = [];
 const size = () => {
   const r = devicePixelRatio || 1;
-  cv.width = innerWidth * r; cv.height = innerHeight * r; cx.setTransform(r,0,0,r,0,0);
-  stars = Array.from({length: Math.round(innerWidth * innerHeight / 5500)}, () => ({
+  for (const c of [cv, fx]) { c.width = innerWidth * r; c.height = innerHeight * r; c.getContext("2d").setTransform(r,0,0,r,0,0); }
+  stars = Array.from({length: Math.round(innerWidth * innerHeight / 5000)}, () => ({
     x: Math.random()*innerWidth, y: Math.random()*innerHeight, r: Math.random()*1.3+.2, p: Math.random()*6.28, s: Math.random()*.02+.004}));
 };
-const draw = () => {
+const drawSky = () => {
   cx.clearRect(0,0,innerWidth,innerHeight);
   for (const s of stars) {
     s.p += s.s;
@@ -198,9 +299,87 @@ const draw = () => {
     cx.fillStyle = "#f6e7c1";
     cx.beginPath(); cx.arc(s.x, s.y, s.r, 0, 6.28); cx.fill();
   }
-  if (!reduce) requestAnimationFrame(draw);
+  if (!reduce && Math.random() < .006) shoot.push({x: Math.random()*innerWidth*.8+innerWidth*.2, y: Math.random()*innerHeight*.4, v: 9+Math.random()*5, l: 1});
+  for (const m of shoot) {
+    const g = cx.createLinearGradient(m.x, m.y, m.x + 90, m.y - 45);
+    g.addColorStop(0, "rgba(255,250,240,.95)"); g.addColorStop(1, "rgba(255,250,240,0)");
+    cx.globalAlpha = Math.max(0, m.l); cx.strokeStyle = g; cx.lineWidth = 1.6;
+    cx.beginPath(); cx.moveTo(m.x, m.y); cx.lineTo(m.x + 90, m.y - 45); cx.stroke();
+    m.x -= m.v; m.y += m.v / 2; m.l -= .012;
+  }
+  shoot = shoot.filter(m => m.l > 0);
+  if (!reduce) requestAnimationFrame(drawSky);
 };
-size(); draw(); addEventListener("resize", () => { size(); if (reduce) draw(); });
+size(); drawSky();
+addEventListener("resize", () => { size(); if (reduce) drawSky(); });
+
+/* fx: tap sparkles + heart fireworks */
+let fxOn = false;
+const heartPt = t => [16*Math.sin(t)**3, -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t))];
+const drawFx = () => {
+  fc.clearRect(0,0,innerWidth,innerHeight);
+  for (const p of sparks) {
+    p.x += p.vx; p.y += p.vy; p.vy += .03; p.vx *= .985; p.vy *= .985; p.l -= .011;
+    fc.globalAlpha = Math.max(0, p.l); fc.fillStyle = p.c;
+    fc.beginPath(); fc.arc(p.x, p.y, p.r, 0, 6.28); fc.fill();
+  }
+  sparks = sparks.filter(p => p.l > 0);
+  if (sparks.length) requestAnimationFrame(drawFx); else { fxOn = false; fc.clearRect(0,0,innerWidth,innerHeight); }
+};
+const burst = (x, y, n, big) => {
+  const cols = ["#ff6b8a","#ffb3c4","#f6e7c1","#fffaf0"];
+  for (let i = 0; i < n; i++) {
+    let vx, vy;
+    if (big) { const hp = heartPt(i / n * 6.283); vx = hp[0] * .32; vy = hp[1] * .32; }
+    else { const a = Math.random()*6.283, sp = Math.random()*3+1; vx = Math.cos(a)*sp; vy = Math.sin(a)*sp; }
+    sparks.push({x, y, vx, vy, l: 1, c: cols[i % 4], r: big ? 2.4 : 1.8});
+  }
+  if (!fxOn) { fxOn = true; requestAnimationFrame(drawFx); }
+};
+document.addEventListener("click", e => {
+  if (reduce || e.target.closest("button,a,.paper,.card,.term,#intro")) return;
+  burst(e.clientX, e.clientY, 22, false);
+});
+
+/* music box: WebAudio, original melody */
+let ac = null, master = null, playing = false, nextBar = 0, barIdx = 0, timer = null;
+const N = n => 440 * 2 ** ((n - 69) / 12);
+const prog = [[60,64,67,72],[57,60,64,69],[53,57,60,65],[55,59,62,67]];
+const mel = [[76,0],[79,2],[77,4],[76,6],[72,0],[74,3],[76,4],[72,6],[69,0],[72,2],[74,4],[77,6],[74,0],[71,2],[72,4],[79,6]];
+const note = (f, t, v, d) => {
+  const o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain(), g2 = ac.createGain();
+  o.type = "sine"; o2.type = "sine"; o.frequency.value = f; o2.frequency.value = f * 4.01; g2.gain.value = .12;
+  o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .008); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  o.start(t); o2.start(t); o.stop(t + d + .05); o2.stop(t + d + .05);
+};
+const schedule = () => {
+  if (!playing) return;
+  const e = 60 / 72 / 2;
+  while (nextBar < ac.currentTime + 1.2) {
+    const b = barIdx % 4, ch = prog[b];
+    [0,1,2,3,2,1,2,3].forEach((k, i) => note(N(ch[k]), nextBar + i*e, .06, 1.6));
+    note(N(ch[0] - 12), nextBar, .09, 3);
+    mel.slice(b * 4, b * 4 + 4).forEach(m => note(N(m[0]), nextBar + m[1]*e, .13, 2.2));
+    nextBar += 8 * e; barIdx++;
+  }
+  timer = setTimeout(schedule, 300);
+};
+const startMusic = () => {
+  try {
+    if (!ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      master = ac.createGain(); master.gain.value = .55;
+      const dl = ac.createDelay(), fb = ac.createGain(), wet = ac.createGain();
+      dl.delayTime.value = .33; fb.gain.value = .32; wet.gain.value = .35;
+      master.connect(ac.destination); master.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wet); wet.connect(ac.destination);
+    }
+    ac.resume(); nextBar = ac.currentTime + .1; playing = true; schedule();
+    $("music").classList.add("playing");
+  } catch (err) {}
+};
+const stopMusic = () => { playing = false; clearTimeout(timer); $("music").classList.remove("playing"); };
+$("music").addEventListener("click", () => playing ? stopMusic() : startMusic());
 
 /* terminal typing */
 const nm = esc(CONFIG.ism);
@@ -216,44 +395,59 @@ const lines = [
   ``,
   `<span class="r">&gt; Компиляция: юрак — 1 та очик савол</span>`
 ];
-const pre = document.getElementById("code");
-const heroText = document.getElementById("heroText");
-if (reduce) { pre.innerHTML = lines.join("\n"); heroText.classList.add("on"); }
-else {
+const pre = $("code"), heroText = $("heroText");
+let typed = false;
+const typeCode = () => {
+  if (typed) return; typed = true;
+  if (reduce) { pre.innerHTML = lines.join("\n"); heroText.classList.add("on"); return; }
   let li = 0, ci = 0, out = "";
   const plain = h => h.replace(/<[^>]+>/g, "").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;/g,"'");
   const tick = () => {
     if (li >= lines.length) { pre.innerHTML = out + '<span class="cur"></span>'; heroText.classList.add("on"); return; }
     const full = lines[li], txt = plain(full);
-    if (ci < txt.length) { ci++; pre.innerHTML = out + esc(txt.slice(0, ci)) + '<span class="cur"></span>'; setTimeout(tick, 28 + Math.random()*40); }
-    else { out += full + "\n"; li++; ci = 0; pre.innerHTML = out + '<span class="cur"></span>'; setTimeout(tick, 260); }
+    if (ci < txt.length) { ci++; pre.innerHTML = out + esc(txt.slice(0, ci)) + '<span class="cur"></span>'; setTimeout(tick, 26 + Math.random()*38); }
+    else { out += full + "\n"; li++; ci = 0; pre.innerHTML = out + '<span class="cur"></span>'; setTimeout(tick, 240); }
   };
-  setTimeout(tick, 600);
-}
+  setTimeout(tick, 400);
+};
+
+/* intro */
+$("openBtn").addEventListener("click", () => {
+  $("env").classList.add("open");
+  startMusic();
+  setTimeout(() => { $("intro").classList.add("gone"); document.body.classList.remove("locked"); $("music").classList.add("on"); typeCode(); }, reduce ? 0 : 1900);
+});
 
 /* counter */
 const start = new Date(CONFIG.oxirgiSuhbat).getTime();
 const pad = n => String(n).padStart(2, "0");
 const upd = () => {
   let d = Math.max(0, Math.floor((Date.now() - start) / 1000));
-  document.getElementById("days").textContent = Math.floor(d / 86400) + " кун";
+  $("days").textContent = Math.floor(d / 86400) + " кун";
   d %= 86400;
-  document.getElementById("hh").textContent = pad(Math.floor(d / 3600));
-  document.getElementById("mm").textContent = pad(Math.floor(d % 3600 / 60));
-  document.getElementById("ss").textContent = pad(d % 60);
+  $("hh").textContent = pad(Math.floor(d / 3600));
+  $("mm").textContent = pad(Math.floor(d % 3600 / 60));
+  $("ss").textContent = pad(d % 60);
 };
 upd(); setInterval(upd, 1000);
 
+/* constellation heart */
+const pts = Array.from({length: 15}, (_, i) => heartPt(i / 15 * 6.283));
+$("hp").setAttribute("d", "M" + pts.map(p => p[0].toFixed(2) + " " + p[1].toFixed(2)).join(" L") + " Z");
+$("hs").innerHTML = pts.map((p, i) => `<circle cx="${p[0].toFixed(2)}" cy="${p[1].toFixed(2)}" r="${i % 3 ? .45 : .7}" style="animation-delay:${(i*.17).toFixed(2)}s"/>`).join("");
+
 /* reveal on scroll */
-const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add("on"); }), {threshold: .2});
-document.querySelectorAll(".letter.reveal").forEach(e => io.observe(e));
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) e.target.classList.add(e.target.id === "box" ? "open" : "on");
+}), {threshold: .35});
+document.querySelectorAll(".reveal:not(#heroText),#const,#box").forEach(e => io.observe(e));
 
 /* answer */
-const ans = document.getElementById("answer");
+const ans = $("answer");
 const tg = CONFIG.telegram ? `<a class="link" href="https://t.me/${encodeURIComponent(CONFIG.telegram)}">Телеграмда менга ёзинг → @${esc(CONFIG.telegram)}</a>` : "";
 const hearts = () => {
   if (reduce) return;
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 45; i++) {
     const h = document.createElement("div");
     h.className = "heart"; h.textContent = "♥";
     h.style.left = Math.random()*100 + "vw";
@@ -264,13 +458,15 @@ const hearts = () => {
     setTimeout(() => h.remove(), 7000);
   }
 };
-document.getElementById("yes").addEventListener("click", () => {
-  ans.innerHTML = `<h2>Сиз мени дунёдаги энг бахтли <em>инсонга</em> айлантирдингиз.</h2><p class="mute" style="margin:0 auto">Хозир телефонимни кулимда ушлаб, Сизнинг хабарингизни кутяпман.</p>${tg}`;
-  ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on"); hearts();
+const show = html => { ans.innerHTML = html; ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on"); };
+$("yes").addEventListener("click", () => {
+  show(`<div class="script">Сиз розисиз!</div><h2>Сиз мени дунёдаги энг бахтли <em>инсонга</em> айлантирдингиз.</h2><p class="mute" style="margin:0 auto">Хозир телефонимни кулимда ушлаб, Сизнинг хабарингизни кутяпман.</p>${tg}`);
+  hearts();
+  if (!reduce) [0, 500, 1000, 1600, 2300].forEach((t, i) => setTimeout(() =>
+    burst(innerWidth * (.2 + .6 * Math.random()), innerHeight * (.2 + .35 * Math.random()), 70, i % 2 === 0), t));
 });
-document.getElementById("talk").addEventListener("click", () => {
-  ans.innerHTML = `<h2>Шунинг узи мен учун <em>катта бахт</em>.</h2><p class="mute" style="margin:0 auto">Шошилмаймиз. Бир пиёла чой устида хаммасини гаплашамиз — качон хохласангиз.</p>${tg}`;
-  ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on");
+$("talk").addEventListener("click", () => {
+  show(`<h2>Шунинг узи мен учун <em>катта бахт</em>.</h2><p class="mute" style="margin:0 auto">Шошилмаймиз. Бир пиёла чой устида хаммасини гаплашамиз — качон хохласангиз.</p>${tg}`);
 });
 }
 </script>
