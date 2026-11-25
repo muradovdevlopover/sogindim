@@ -251,6 +251,7 @@ const CONFIG = {
   menIsmim: "Сизни севган дастурчи",
   oxirgiSuhbat: "2026-05-15T21:00",
   telegram: "zmn_dev",
+  goatcounter: "",                    // GoatCounter kod nomi, masalan "zmn"
   xotiralar: [
     ["v2.0", "release: биз — абадий", "хали ёзилмаган… Сизнинг жавобингизни кутяпти"],
     ["9b1e0c", "chore: май ойидан бери кутиш", "хар куни Сизни уйладим"],
@@ -269,6 +270,15 @@ const CONFIG = {
   ]
 };
 /* ===================================== */
+
+/* visit analytics (GoatCounter) — only when a code is set */
+const track = (path, title) => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title, event: true}); } catch (e) {} };
+if (CONFIG.goatcounter && /^[a-z0-9-]+$/.test(CONFIG.goatcounter)) {
+  const gs = document.createElement("script");
+  gs.async = true; gs.src = "https://gc.zgo.at/count.js";
+  gs.dataset.goatcounter = "https://" + CONFIG.goatcounter + ".goatcounter.com/count";
+  document.head.appendChild(gs);
+}
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -414,6 +424,7 @@ const typeCode = () => {
 /* intro */
 $("openBtn").addEventListener("click", () => {
   $("env").classList.add("open");
+  track("konvert-ochildi", "Konvert ochildi");
   startMusic();
   setTimeout(() => { $("intro").classList.add("gone"); document.body.classList.remove("locked"); $("music").classList.add("on"); typeCode(); }, reduce ? 0 : 1900);
 });
@@ -460,12 +471,14 @@ const hearts = () => {
 };
 const show = html => { ans.innerHTML = html; ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on"); };
 $("yes").addEventListener("click", () => {
+  track("javob-ha", "Ha, roziman bosildi");
   show(`<div class="script">Сиз розисиз!</div><h2>Сиз мени дунёдаги энг бахтли <em>инсонга</em> айлантирдингиз.</h2><p class="mute" style="margin:0 auto">Хозир телефонимни кулимда ушлаб, Сизнинг хабарингизни кутяпман.</p>${tg}`);
   hearts();
   if (!reduce) [0, 500, 1000, 1600, 2300].forEach((t, i) => setTimeout(() =>
     burst(innerWidth * (.2 + .6 * Math.random()), innerHeight * (.2 + .35 * Math.random()), 70, i % 2 === 0), t));
 });
 $("talk").addEventListener("click", () => {
+  track("javob-gaplashaylik", "Avval gaplashaylik bosildi");
   show(`<h2>Шунинг узи мен учун <em>катта бахт</em>.</h2><p class="mute" style="margin:0 auto">Шошилмаймиз. Бир пиёла чой устида хаммасини гаплашамиз — качон хохласангиз.</p>${tg}`);
 });
 }
