@@ -118,6 +118,19 @@ footer{text-align:center;padding:30px 18px 90px;font:13px "JetBrains Mono",monos
 @media(max-width:600px){pre{font-size:12.5px;min-height:250px}.log li{grid-template-columns:1fr;gap:2px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.const path{stroke-dashoffset:0}}
 </style>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=114674876', 'ym');
+
+    ym(114674876, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/114674876" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </head>
 <body class="locked">
 <canvas id="sky"></canvas>
@@ -251,7 +264,6 @@ const CONFIG = {
   menIsmim: "Сизни севган дастурчи",
   oxirgiSuhbat: "2026-05-15T21:00",
   telegram: "zmn_dev",
-  goatcounter: "",                    // GoatCounter kod nomi, masalan "zmn"
   xotiralar: [
     ["v2.0", "release: биз — абадий", "хали ёзилмаган… Сизнинг жавобингизни кутяпти"],
     ["9b1e0c", "chore: май ойидан бери кутиш", "хар куни Сизни уйладим"],
@@ -271,14 +283,8 @@ const CONFIG = {
 };
 /* ===================================== */
 
-/* visit analytics (GoatCounter) — only when a code is set */
-const track = (path, title) => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path, title, event: true}); } catch (e) {} };
-if (CONFIG.goatcounter && /^[a-z0-9-]+$/.test(CONFIG.goatcounter)) {
-  const gs = document.createElement("script");
-  gs.async = true; gs.src = "https://gc.zgo.at/count.js";
-  gs.dataset.goatcounter = "https://" + CONFIG.goatcounter + ".goatcounter.com/count";
-  document.head.appendChild(gs);
-}
+/* visit analytics (Yandex Metrika goals) */
+const track = goal => { try { if (window.ym) window.ym(114674876, "reachGoal", goal); } catch (e) {} };
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -424,7 +430,7 @@ const typeCode = () => {
 /* intro */
 $("openBtn").addEventListener("click", () => {
   $("env").classList.add("open");
-  track("konvert-ochildi", "Konvert ochildi");
+  track("konvert-ochildi");
   startMusic();
   setTimeout(() => { $("intro").classList.add("gone"); document.body.classList.remove("locked"); $("music").classList.add("on"); typeCode(); }, reduce ? 0 : 1900);
 });
@@ -471,14 +477,14 @@ const hearts = () => {
 };
 const show = html => { ans.innerHTML = html; ans.classList.remove("on"); void ans.offsetWidth; ans.classList.add("on"); };
 $("yes").addEventListener("click", () => {
-  track("javob-ha", "Ha, roziman bosildi");
+  track("javob-ha");
   show(`<div class="script">Сиз розисиз!</div><h2>Сиз мени дунёдаги энг бахтли <em>инсонга</em> айлантирдингиз.</h2><p class="mute" style="margin:0 auto">Хозир телефонимни кулимда ушлаб, Сизнинг хабарингизни кутяпман.</p>${tg}`);
   hearts();
   if (!reduce) [0, 500, 1000, 1600, 2300].forEach((t, i) => setTimeout(() =>
     burst(innerWidth * (.2 + .6 * Math.random()), innerHeight * (.2 + .35 * Math.random()), 70, i % 2 === 0), t));
 });
 $("talk").addEventListener("click", () => {
-  track("javob-gaplashaylik", "Avval gaplashaylik bosildi");
+  track("javob-gaplashaylik");
   show(`<h2>Шунинг узи мен учун <em>катта бахт</em>.</h2><p class="mute" style="margin:0 auto">Шошилмаймиз. Бир пиёла чой устида хаммасини гаплашамиз — качон хохласангиз.</p>${tg}`);
 });
 }
